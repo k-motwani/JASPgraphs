@@ -39,12 +39,12 @@ jobs:
       fail-fast: false
       matrix:
         r: [4.1.0]
-        os: [ubuntu-latest, macOS-latest, windows-latest]
+#         os: [ubuntu-latest, macOS-latest, windows-latest]
         # only common modules
-        module: [jasp-stats/jaspDescriptives, jasp-stats/jaspTTests, jasp-stats/jaspAnova, jasp-stats/jaspRegression, jasp-stats/jaspFrequencies, jasp-stats/jaspFactor]
+#         module: [jasp-stats/jaspDescriptives, jasp-stats/jaspTTests, jasp-stats/jaspAnova, jasp-stats/jaspRegression, jasp-stats/jaspFrequencies, jasp-stats/jaspFactor]
         # for debugging
-#         os: [ubuntu-latest]
-#         module: [jasp-stats/jaspDescriptives, jasp-stats/jaspTTests]
+        os: [ubuntu-latest]
+        module: [jasp-stats/jaspDescriptives, jasp-stats/jaspTTests]
 
 #    # outputs is generated with the following R code. It does not matter if some outputs are unused.
 #     oses      <- c("ubuntu-latest", "macOS-latest", "windows-latest")
@@ -86,37 +86,41 @@ jobs:
         with:
          r-version: ${{ matrix.r }}
 
-      - name: clone module
-        run: |
-          echo cloning "https://github.com/${{ matrix.module }}.git"
-          git clone "https://github.com/${{ matrix.module }}.git"
-        shell: bash
+#       - name: clone module
+#         run: |
+#           echo cloning "https://github.com/${{ matrix.module }}.git"
+#           git clone "https://github.com/${{ matrix.module }}.git"
+#         shell: bash
         
-      - uses: jasp-stats/jasp-actions/setup-test-env@master
+#       - uses: jasp-stats/jasp-actions/setup-test-env@master
 
-      - name: Install igraph from source
-        if: ${{ matrix.os }} == 'ubuntu-latest' && ${{ matrix.module }} == 'jasp-stats/jaspFactor'
-        run: install.packages("igraph", type = "source", repos = "https://cloud.r-project.org")
-        shell: Rscript {0}
+#       - name: Install igraph from source
+#         if: ${{ matrix.os }} == 'ubuntu-latest' && ${{ matrix.module }} == 'jasp-stats/jaspFactor'
+#         run: install.packages("igraph", type = "source", repos = "https://cloud.r-project.org")
+#         shell: Rscript {0}
 
       - name: Install jaspGraphs
+        env:
+          HANDLE:     ${{ github.actor}}
+          COMMIT_SHA: ${{ github.head_ref }}
+          PR_BRANCH:  ${{ github.event.pull_request.head.sha }}
         run: |
-           print(sprintf("Installing jaspGraphs from commit %s and ref %s", Sys.getenv("GITHUB_SHA", unset = "MISSING SHA!"), Sys.getenv("GITHUB_REF", unset = "MISSING REF!")))
-           remotes::install_local(".")
+           print(sprintf("Installing jaspGraphs from commit %s and branch %s triggered by %s", Sys.getenv("COMMIT_SHA", unset = "MISSING COMMIT_SHA!"), Sys.getenv("PR_BRANCH", unset = "MISSING PR_BRANCH!"), Sys.getenv("HANDLE", unset = "MISSING HANDLE!")))
+           # remotes::install_local(".")
         shell: Rscript {0}
 
-      - name: Run unit tests
-        run: |
-          setwd(basename("${{ matrix.module }}"))
-          source("tests/testthat.R")
-        shell: Rscript {0}
-        
-#       - name: fake unit tests for debugging
+#       - name: Run unit tests
 #         run: |
-#           if [ ${{ matrix.module }} == 'jasp-stats/jaspDescriptives' ]; then
-#             exit 1
-#           fi
-#         shell: bash
+#           setwd(basename("${{ matrix.module }}"))
+#           source("tests/testthat.R")
+#         shell: Rscript {0}
+
+      - name: fake unit tests for debugging
+        run: |
+          if [ ${{ matrix.module }} == 'jasp-stats/jaspDescriptives' ]; then
+            exit 1
+          fi
+        shell: bash
        
       - name: set error if tests fail
         id: update-output
@@ -170,10 +174,12 @@ jobs:
               oses = ["windows-latest", "macOS-latest", "ubuntu-latest"];
               for (const module in obj) {
                 str = "\n| ".concat(module, " | ", oses.map(os => obj[module].has(os) ? "❌" : "✅").join(" | "));
-                body=body.concat(str);
+                body = body.concat(str);
                 console.log(body)
               }
             }
+            
+            body = body.concat("\nThe full log is available [here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).")
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,
