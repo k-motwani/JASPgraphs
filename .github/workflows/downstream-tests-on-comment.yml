@@ -82,9 +82,9 @@ jobs:
         with:
           ref: ${{ needs.get-pr-sha.outputs.sha }}
 
-      - uses: r-lib/actions/setup-r@master
-        with:
-         r-version: ${{ matrix.r }}
+#       - uses: r-lib/actions/setup-r@master
+#         with:
+#          r-version: ${{ matrix.r }}
 
 #       - name: clone module
 #         run: |
@@ -99,15 +99,16 @@ jobs:
 #         run: install.packages("igraph", type = "source", repos = "https://cloud.r-project.org")
 #         shell: Rscript {0}
 
-      - name: Install jaspGraphs
+      - name: Dump GitHub context
         env:
-          HANDLE:     ${{ github.actor}}
-          COMMIT_SHA: ${{ github.head_ref }}
-          PR_BRANCH:  ${{ github.event.pull_request.head.sha }}
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: Install ${{ github.event.repository.name }}
         run: |
-           print(sprintf("Installing jaspGraphs from commit %s and branch %s triggered by %s", Sys.getenv("COMMIT_SHA", unset = "MISSING COMMIT_SHA!"), Sys.getenv("PR_BRANCH", unset = "MISSING PR_BRANCH!"), Sys.getenv("HANDLE", unset = "MISSING HANDLE!")))
-           # remotes::install_local(".")
-        shell: Rscript {0}
+           echo "Installing ${{ github.event.repository.name }} from commit ${{ github.event.pull_request.head.sha }} and branch ${{ github.actor }}/${GITHUB_HEAD_REF}"
+           # Rscript -e 'remotes::install_local(".")'
+        shell: bash
 
 #       - name: Run unit tests
 #         run: |
@@ -179,7 +180,7 @@ jobs:
               }
             }
             
-            body = body.concat("\nThe full log is available [here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).")
+            body = body.concat("\n\nThe full log is available [here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).")
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,
