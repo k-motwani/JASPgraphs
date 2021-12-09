@@ -171,7 +171,7 @@ jobs:
                 obj[module].add(os);
               }
               
-              body = "The following downstream unit tests failed:\n| Module | windows-latest | maxOS-latest | ubuntu-latest |\n| ---: | :---: | :---: | :---: |"
+              body = "The following downstream unit tests failed:\n| Module | windows-latest | macOS-latest | ubuntu-latest |\n| ---: | :---: | :---: | :---: |"
               oses = ["windows-latest", "macOS-latest", "ubuntu-latest"];
               for (const module in obj) {
                 str = "\n| ".concat(module, " | ", oses.map(os => obj[module].has(os) ? "❌" : "✅").join(" | "));
