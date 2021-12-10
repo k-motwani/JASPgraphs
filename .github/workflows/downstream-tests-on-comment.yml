@@ -6,13 +6,13 @@ on:
     - created
 
 jobs:
-  get-pr-sha:
+  create-comment:
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/test-downstream'}}
     runs-on: ubuntu-latest
     
     outputs:
-      sha: ${{ steps.sha.outputs.result }}
-    
+      sha: ${{ steps.sha.outputs.comment-id }}
+
     steps:
     
     - name: Get PR info
@@ -26,7 +26,7 @@ jobs:
             repo,
             pull_number: number,
           });
-          console.log(pr.data.head.sha)
+          // console.log(pr) // for debugging
           return pr
       
     - name: Print metadata and set PR SHA
@@ -34,7 +34,7 @@ jobs:
       env:
         pr_info: ${{ steps.get-pr-info.outputs.result }}
       run: |
-        #echo ${pr_info}
+        # this step is mainly there for debugging
         base=$(echo ${pr_info} | jq '.data["base"]["label"]')
         head=$(echo ${pr_info} | jq '.data["head"]["label"]')
         commit=$(echo ${pr_info} | jq -r '.data["head"]["sha"]')
@@ -44,16 +44,24 @@ jobs:
             base       ${base}                                  \
             head       ${head}                                  \
             commit     ${commit}                                \
-            GITHUB_SHA ${GITHUB_SHA}                            \
             github.sha ${{ github.sha }}                        \
             comment    ${{ github.event.comment.html_url }}     \
                
-        #pr.data.head.sha
-        echo $(echo ${pr_info} | jq -r '.data["head"]["sha"]')
-        echo "::set-output name=result::$(echo ${pr_info} | jq -r '.data["head"]["sha"]')"
+        echo "::set-output name=commit::${commit}"
               
       shell: bash
 
+#     - name: Create initial comment
+#       id: create-comment
+#       uses: actions/github-script@v5
+#       with:
+#         script: |
+#           response = await github.rest.issues.createComment({
+#               issue_number: context.issue.number,
+#               owner: context.repo.owner,
+#               repo: context.repo.repo,
+#               body: body,
+#             });
 
   unit-tests:
     runs-on: ${{ matrix.os }}
@@ -155,7 +163,7 @@ jobs:
 
   report-results:
     runs-on: ubuntu-latest
-    needs: unit-tests
+    needs: [create-comment, unit-tests]
     
     steps:
 
@@ -202,7 +210,7 @@ jobs:
             
             body = body.concat("\n\nThe full log is available [here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).")
             
-            response = github.rest.issues.createComment({
+            const response = await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
