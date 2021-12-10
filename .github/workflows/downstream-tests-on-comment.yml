@@ -14,6 +14,7 @@ jobs:
       sha: ${{ steps.sha.outputs.result }}
     
     steps:
+    
     - name: Get PR SHA
       id: sha
       uses: actions/github-script@v5
@@ -106,8 +107,14 @@ jobs:
 
       - name: Install ${{ github.event.repository.name }}
         run: |
-           echo "Installing ${{ github.event.repository.name }} from commit ${{ github.event.pull_request.head.sha }} and branch ${{ github.actor }}/${GITHUB_HEAD_REF}"
-           # Rscript -e 'remotes::install_local(".")'
+          echo "Installing ${{ github.event.repository.name }} \
+            from commit ${{ github.event.pull_request.head.sha }} \
+            and branch ${{ github.actor }}/${{ github.head_ref}} \
+            triggered by comment ${{ github.event.comment.html_url }} \
+            in pull request ${{ github.issue.pull_request.html_url }}"
+            # Rscript -e 'remotes::install_local(".")'
+          echo "printenv"
+          printenv
         shell: bash
 
 #       - name: Run unit tests
