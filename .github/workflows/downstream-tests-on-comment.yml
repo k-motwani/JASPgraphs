@@ -216,11 +216,11 @@ jobs:
             
             body = body.concat("\n\nThe full log is available [here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).")
             
-            const response = await github.rest.issues.updateComment({
+            const response = await github.rest.issues.createComment({
+              issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              comment_id: ${{ needs.create-comment.outputs.comment-id }},
-              body: body
+              body: body,
             });
 
             console.log(response)
