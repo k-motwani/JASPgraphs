@@ -64,7 +64,6 @@ jobs:
               comment_id: ${{ github.event.comment.id }},
               body: body
             });
-          return response.data.id;
 
 
   unit-tests:
