@@ -26,7 +26,7 @@ jobs:
             repo,
             pull_number: number,
           });
-          console.log(pr);
+          console.log(pr.data.head.sha)
           return pr
       
     - name: Print metadata and set PR SHA
@@ -34,23 +34,20 @@ jobs:
       env:
         pr_info: ${{ steps.get-pr-info.outputs.result }}
       run: |
-        # unfortunately, GitHub actions does not provide information on the PR, since the action is not triggered by a PR, so we use the api instead.
-        #pr_info=$(curl -X GET "https://${{ github.event.issue.pull_request.url }}")
-        echo ${pr_info} 
-        base=$(echo ${pr_info} | jq '.base["label"]')
-        head=$(echo ${pr_info} | jq '.head["label"]')
+        #echo ${pr_info}
+        base=$(echo ${pr_info} | jq '.data["base"]["label"]')
+        head=$(echo ${pr_info} | jq '.data["head"]["label"]')
+        commit=$(echo ${pr_info} | jq -r '.data["head"]["sha"]')
         
         printf '%-15s: %s\n' \
             repository ${{ github.event.repository.name }}      \
             base       ${base}                                  \
             head       ${head}                                  \
+            commit     ${commit}                                \
+            GITHUB_SHA ${GITHUB_SHA}                            \
+            github.sha ${{ github.sha }}                        \
             comment    ${{ github.event.comment.html_url }}     \
-        
-        
-        # this would retrieves commit info, but it's unclear which commit corresponds to the current comment (it need not be the last).
-        #commits_url=$(echo ${pr_info} | jq -r '.commits_url')
-        #commits_info=$(curl -X GET ${commits_url})
-        
+               
         #pr.data.head.sha
         echo $(echo ${pr_info} | jq -r '.data["head"]["sha"]')
         echo "::set-output name=result::$(echo ${pr_info} | jq -r '.data["head"]["sha"]')"
@@ -60,7 +57,7 @@ jobs:
 
   unit-tests:
     runs-on: ${{ matrix.os }}
-    needs: get-pr-sha
+    #needs: get-pr-sha
     continue-on-error: true
     
     name: ${{ matrix.os }} (${{ matrix.r }} (${{ matrix.module }})
@@ -109,8 +106,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: ${{ needs.get-pr-sha.outputs.sha }}
+#        with: 
+#          ref: ${{ needs.get-pr-sha.outputs.sha }}
 
 #       - uses: r-lib/actions/setup-r@master
 #         with:
