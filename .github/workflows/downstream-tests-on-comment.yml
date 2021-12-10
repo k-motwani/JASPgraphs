@@ -55,8 +55,7 @@ jobs:
       uses: actions/github-script@v5
       with:
         script: |
-          body = "${{ github.event.comment.body }}";
-          body.concat("\n\nAutomatic edit:\nRunning downstream tests for commit ${{ steps.get-commit.outputs.commit }}, follow the run [here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).");
+          body = "${{ github.event.comment.body }}".concat("\n\nAutomatic edit:\nRunning downstream tests for commit ${{ steps.get-commit.outputs.commit }}, follow the run [here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).");
           console.log(body);
           github.rest.issues.updateComment({
               owner: context.repo.owner,
