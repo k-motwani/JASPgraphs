@@ -32,7 +32,7 @@ jobs:
     - name: Print metadata
       run: |
         # unfortunately, GitHub actions does not provide information on the PR, since the action is not triggered by a PR, so we use the api instead.
-        pr_info=$(curl -X GET "https://${{ github.issue.pull_request.url }}")
+        pr_info=$(curl -X GET "https://${{ github.event.issue.pull_request.url }}")
         base=$(echo ${pr_info} | jq '.base["label"]')
         head=$(echo ${pr_info} | jq '.head["label"]')
         
