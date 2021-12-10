@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     
     outputs:
-      comment-id: ${{ steps.create-comment.outputs.comment-id }} 
-      commit:     ${{ steps.get-commit.outputs.result }}
+      comment-id: ${{ steps.create-comment.outputs.result }}
+      commit:     ${{ steps.get-commit.outputs.commit }}
 
     steps:
     
@@ -62,10 +62,8 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Running downstream tests for commit ${{ steps.get-commit.outputs.commit }}",
+              body: "Running downstream tests for commit ${{ steps.get-commit.outputs.commit }}, view the run [here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})",
             });
-          console.log(response);
-          console.log(`response.data.id = ${response.data.id}`);
           return response.data.id;
 
   unit-tests:
@@ -221,6 +219,12 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: body,
+            });
+            
+            github.rest.issues.deleteComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: ${{ needs.create-comment.outputs.comment_id }},
             });
 
             console.log(response)
