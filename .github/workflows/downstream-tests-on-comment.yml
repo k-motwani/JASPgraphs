@@ -15,11 +15,10 @@ jobs:
     
     steps:
     
-    - name: Get PR SHA
-      id: sha
+    - name: Get PR info
+      id: get-pr-info
       uses: actions/github-script@v5
       with:
-        result-encoding: string
         script: |
           const { owner, repo, number } = context.issue;
           const pr = await github.rest.pulls.get({
@@ -27,12 +26,17 @@ jobs:
             repo,
             pull_number: number,
           });
-          return pr.data.head.sha
+          console.log(pr);
+          return pr
       
-    - name: Print metadata
+    - name: Print metadata and set PR SHA
+      id: set-sha
+      env:
+        pr_info: ${{ steps.get-pr-info.outputs.result }}
       run: |
         # unfortunately, GitHub actions does not provide information on the PR, since the action is not triggered by a PR, so we use the api instead.
-        pr_info=$(curl -X GET "https://${{ github.event.issue.pull_request.url }}")
+        #pr_info=$(curl -X GET "https://${{ github.event.issue.pull_request.url }}")
+        echo ${pr_info} 
         base=$(echo ${pr_info} | jq '.base["label"]')
         head=$(echo ${pr_info} | jq '.head["label"]')
         
@@ -42,9 +46,14 @@ jobs:
             head       ${head}                                  \
             comment    ${{ github.event.comment.html_url }}     \
         
+        
         # this would retrieves commit info, but it's unclear which commit corresponds to the current comment (it need not be the last).
         #commits_url=$(echo ${pr_info} | jq -r '.commits_url')
         #commits_info=$(curl -X GET ${commits_url})
+        
+        #pr.data.head.sha
+        echo $(echo ${pr_info} | jq -r '.data["head"]["sha"]')
+        echo "::set-output name=result::$(echo ${pr_info} | jq -r '.data["head"]["sha"]')"
               
       shell: bash
 
