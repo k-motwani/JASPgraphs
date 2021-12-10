@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     
     outputs:
-      comment-id: ${{ steps.create-comment.outputs.result }}
       commit:     ${{ steps.get-commit.outputs.commit }}
 
     steps:
@@ -52,19 +51,6 @@ jobs:
               
       shell: bash
 
-    - name: Create initial comment
-      id: create-comment
-      uses: actions/github-script@v5
-      with:
-        result-encoding: string
-        script: |
-          response = await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: "Running downstream tests for commit ${{ steps.get-commit.outputs.commit }}, view the run [here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})",
-            });
-          return response.data.id;
 
   unit-tests:
     runs-on: ${{ matrix.os }}
@@ -165,6 +151,7 @@ jobs:
           echo "::set-output name=${nm}::error"
         shell: bash
 
+
   report-results:
     runs-on: ubuntu-latest
     needs: [create-comment, unit-tests]
@@ -214,17 +201,9 @@ jobs:
             
             body = body.concat("\n\nThe full log is available [here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).")
             
-            const response = await github.rest.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: body,
             });
-            
-            github.rest.issues.deleteComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              comment_id: ${{ needs.create-comment.outputs.comment_id }},
-            });
-
-            console.log(response)
