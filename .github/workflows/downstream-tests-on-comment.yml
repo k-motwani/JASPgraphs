@@ -28,6 +28,26 @@ jobs:
             pull_number: number,
           });
           return pr.data.head.sha
+      
+    - name: Print metadata
+      run: |
+        # unfortunately, GitHub actions does not provide information on the PR, since the action is not triggered by a PR, so we use the api instead.
+        pr_info=$(curl -X GET "https://${{ github.issue.pull_request.url }}")
+        base=$(echo ${pr_info} | jq '.base["label"]')
+        head=$(echo ${pr_info} | jq '.head["label"]')
+        
+        printf '%-15s: %s\n' \
+            repository ${{ github.event.repository.name }}      \
+            base       ${base}                                  \
+            head       ${head}                                  \
+            comment    ${{ github.event.comment.html_url }}     \
+        
+        # this would retrieves commit info, but it's unclear which commit corresponds to the current comment (it need not be the last).
+        #commits_url=$(echo ${pr_info} | jq -r '.commits_url')
+        #commits_info=$(curl -X GET ${commits_url})
+              
+      shell: bash
+
 
   unit-tests:
     runs-on: ${{ matrix.os }}
@@ -99,23 +119,10 @@ jobs:
 #         if: ${{ matrix.os }} == 'ubuntu-latest' && ${{ matrix.module }} == 'jasp-stats/jaspFactor'
 #         run: install.packages("igraph", type = "source", repos = "https://cloud.r-project.org")
 #         shell: Rscript {0}
-
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-
-      - name: Install ${{ github.event.repository.name }}
-        run: |
-          echo "Installing ${{ github.event.repository.name }} \
-            from commit ${{ github.event.pull_request.head.sha }} \
-            and branch ${{ github.actor }}/${{ github.head_ref}} \
-            triggered by comment ${{ github.event.comment.html_url }} \
-            in pull request ${{ github.issue.pull_request.html_url }}"
-            # Rscript -e 'remotes::install_local(".")'
-          echo "printenv"
-          printenv
-        shell: bash
+       
+#       - name: Install ${{ github.event.repository.name }}
+#         run: remotes::install_local(".")
+#         shell: Rscript {0}
 
 #       - name: Run unit tests
 #         run: |
@@ -189,9 +196,10 @@ jobs:
             
             body = body.concat("\n\nThe full log is available [here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).")
             
-            github.rest.issues.createComment({
+            response = github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: body,
             });
+            console.log(response)
