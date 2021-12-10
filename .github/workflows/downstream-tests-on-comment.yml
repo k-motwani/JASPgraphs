@@ -6,7 +6,7 @@ on:
     - created
 
 jobs:
-  create-comment:
+  pr-info:
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/test-downstream'}}
     runs-on: ubuntu-latest
     
@@ -67,8 +67,8 @@ jobs:
 
   unit-tests:
     runs-on: ${{ matrix.os }}
-    # this is not really necessary, but it's more user friendly if the comment reply happens first (otherwise create-comment and unit-tests run concurrently).
-    needs: create-comment 
+    # this is not really necessary, but it's more user friendly if the comment is edited first (otherwise pr-info and unit-tests run concurrently).
+    needs: pr-info
     continue-on-error: true
     
     name: ${{ matrix.os }} (${{ matrix.r }} (${{ matrix.module }})
@@ -77,12 +77,12 @@ jobs:
       fail-fast: false
       matrix:
         r: [4.1.0]
-#         os: [ubuntu-latest, macOS-latest, windows-latest]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
         # only common modules
-#         module: [jasp-stats/jaspDescriptives, jasp-stats/jaspTTests, jasp-stats/jaspAnova, jasp-stats/jaspRegression, jasp-stats/jaspFrequencies, jasp-stats/jaspFactor]
+        module: [jasp-stats/jaspDescriptives, jasp-stats/jaspTTests, jasp-stats/jaspAnova, jasp-stats/jaspRegression, jasp-stats/jaspFrequencies, jasp-stats/jaspFactor]
         # for debugging
-        os: [ubuntu-latest]
-        module: [jasp-stats/jaspDescriptives, jasp-stats/jaspTTests]
+        # os: [ubuntu-latest]
+        # module: [jasp-stats/jaspDescriptives, jasp-stats/jaspTTests]
 
 #    # outputs is generated with the following R code. It does not matter if some outputs are unused.
 #     oses      <- c("ubuntu-latest", "macOS-latest", "windows-latest")
@@ -117,42 +117,38 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-#        with: 
-#          ref: ${{ needs.get-pr-sha.outputs.sha }}
 
-#       - uses: r-lib/actions/setup-r@master
-#         with:
-#          r-version: ${{ matrix.r }}
+      - uses: r-lib/actions/setup-r@master
+        with:
+         r-version: ${{ matrix.r }}
 
-#       - name: clone module
-#         run: |
-#           echo cloning "https://github.com/${{ matrix.module }}.git"
-#           git clone "https://github.com/${{ matrix.module }}.git"
-#         shell: bash
-        
-#       - uses: jasp-stats/jasp-actions/setup-test-env@master
-
-#       - name: Install igraph from source
-#         if: ${{ matrix.os }} == 'ubuntu-latest' && ${{ matrix.module }} == 'jasp-stats/jaspFactor'
-#         run: install.packages("igraph", type = "source", repos = "https://cloud.r-project.org")
-#         shell: Rscript {0}
-       
-#       - name: Install ${{ github.event.repository.name }}
-#         run: remotes::install_local(".")
-#         shell: Rscript {0}
-
-#       - name: Run unit tests
-#         run: |
-#           setwd(basename("${{ matrix.module }}"))
-#           source("tests/testthat.R")
-#         shell: Rscript {0}
-
-      - name: fake unit tests for debugging
-        run: |
-          if [ ${{ matrix.module }} == 'jasp-stats/jaspDescriptives' ]; then
-            exit 1
-          fi
+      - name: clone module ${{ matrix.module }}
+        run: git clone "https://github.com/${{ matrix.module }}.git"
         shell: bash
+
+      - uses: jasp-stats/jasp-actions/setup-test-env@master
+
+      - name: Install igraph from source
+        if: ${{ matrix.os  == 'ubuntu-latest' && matrix.module == 'jasp-stats/jaspFactor' }}
+        run: install.packages("igraph", type = "source", repos = "https://cloud.r-project.org")
+        shell: Rscript {0}
+       
+      - name: Install ${{ github.event.repository.name }}
+        run: remotes::install_local(".")
+        shell: Rscript {0}
+
+      - name: Run unit tests
+        run: |
+          setwd(basename("${{ matrix.module }}"))
+          source("tests/testthat.R")
+        shell: Rscript {0}
+
+#       - name: fake unit tests for debugging
+#         run: |
+#           if [ ${{ matrix.module }} == 'jasp-stats/jaspDescriptives' ]; then
+#             exit 1
+#           fi
+#         shell: bash
        
       - name: set error if tests fail
         id: update-output
@@ -167,7 +163,7 @@ jobs:
 
   report-results:
     runs-on: ubuntu-latest
-    needs: [create-comment, unit-tests]
+    needs: [pr-info, unit-tests]
     
     steps:
 
@@ -190,7 +186,7 @@ jobs:
             
             if (Object.keys(outputs).length === 0) {
               console.log("All downstream tests succeeded")
-              body = "All downstream tests for commit ${{ needs.create-comment.outputs.commit }} succeeded! ✅"
+              body = "All downstream tests for commit ${{ needs.pr-info.outputs.commit }} succeeded! ✅"
             } else {
               console.log("Some unit tests failed")
             
@@ -203,7 +199,7 @@ jobs:
                 obj[module].add(os);
               }
               
-              body = "The following downstream tests for commit ${{ needs.create-comment.outputs.commit }} failed:\n| Module | windows-latest | macOS-latest | ubuntu-latest |\n| ---: | :---: | :---: | :---: |"
+              body = "The following downstream tests for commit ${{ needs.pr-info.outputs.commit }} failed:\n| Module | windows-latest | macOS-latest | ubuntu-latest |\n| ---: | :---: | :---: | :---: |"
               oses = ["windows-latest", "macOS-latest", "ubuntu-latest"];
               for (const module in obj) {
                 str = "\n| ".concat(module, " | ", oses.map(os => obj[module].has(os) ? "❌" : "✅").join(" | "));
