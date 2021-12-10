@@ -51,6 +51,21 @@ jobs:
               
       shell: bash
 
+    - name: Update initial comment
+      uses: actions/github-script@v5
+      with:
+        script: |
+          oldbody = "${{ github.event.comment.body }}";
+          oldbody.concat("\n\nAutomatic edit:\nRunning downstream tests for commit ${{ steps.get-commit.outputs.commit }}, follow the run [here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).");
+          console.log(oldbody);
+          github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: ${{ github.event.comment.id }},
+              body: body
+            });
+          return response.data.id;
+
 
   unit-tests:
     runs-on: ${{ matrix.os }}
