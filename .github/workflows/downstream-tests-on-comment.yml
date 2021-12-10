@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     
     outputs:
-      sha: ${{ steps.sha.outputs.comment-id }}
+      comment-id: ${{ steps.sha.outputs.comment-id }}
 
     steps:
     
@@ -30,7 +30,7 @@ jobs:
           return pr
       
     - name: Print metadata and set PR SHA
-      id: set-sha
+      id: get-commit
       env:
         pr_info: ${{ steps.get-pr-info.outputs.result }}
       run: |
@@ -51,21 +51,24 @@ jobs:
               
       shell: bash
 
-#     - name: Create initial comment
-#       id: create-comment
-#       uses: actions/github-script@v5
-#       with:
-#         script: |
-#           response = await github.rest.issues.createComment({
-#               issue_number: context.issue.number,
-#               owner: context.repo.owner,
-#               repo: context.repo.repo,
-#               body: body,
-#             });
+    - name: Create initial comment
+      id: create-comment
+      uses: actions/github-script@v5
+      with:
+        result-encoding: string
+        script: |
+          response = await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Running downstream tests for commit ${{ steps.get-commit.outputs.commit }}",
+            });
+          return response.data.id;
 
   unit-tests:
     runs-on: ${{ matrix.os }}
-    #needs: get-pr-sha
+    # this is not really necessary, but it's more user friendly if the comment reply happens first (otherwise create-comment and unit-tests run concurrently).
+    needs: create-comment 
     continue-on-error: true
     
     name: ${{ matrix.os }} (${{ matrix.r }} (${{ matrix.module }})
@@ -210,10 +213,16 @@ jobs:
             
             body = body.concat("\n\nThe full log is available [here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).")
             
-            const response = await github.rest.issues.createComment({
-              issue_number: context.issue.number,
+            const response = await github.rest.issues.updateComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
+              comment_id: ${{ needs.create-comment.outputs.comment-id }},
               body: body,
             });
+            //const response = await github.rest.issues.createComment({
+            //  issue_number: context.issue.number,
+            //  owner: context.repo.owner,
+            //  repo: context.repo.repo,
+            //  body: body,
+            //});
             console.log(response)
