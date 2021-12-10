@@ -12,7 +12,7 @@ jobs:
     
     outputs:
       comment-id: ${{ steps.create-comment.outputs.comment-id }} 
-      commit:     ${{ steps.get-commit.outputs.commit }}
+      commit:     ${{ steps.get-commit.outputs.result }}
 
     steps:
     
@@ -64,6 +64,8 @@ jobs:
               repo: context.repo.repo,
               body: "Running downstream tests for commit ${{ steps.get-commit.outputs.commit }}",
             });
+          console.log(response);
+          console.log(`response.data.id = ${response.data.id}`);
           return response.data.id;
 
   unit-tests:
@@ -220,10 +222,5 @@ jobs:
               comment_id: ${{ needs.create-comment.outputs.comment-id }},
               body: body
             });
-            //const response = await github.rest.issues.createComment({
-            //  issue_number: context.issue.number,
-            //  owner: context.repo.owner,
-            //  repo: context.repo.repo,
-            //  body: body,
-            //});
+
             console.log(response)
