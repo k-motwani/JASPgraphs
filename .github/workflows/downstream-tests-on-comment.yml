@@ -67,7 +67,7 @@ jobs:
 
   unit-tests:
     runs-on: ${{ matrix.os }}
-    # this is not really necessary, but it's more user friendly if the comment is edited first (otherwise pr-info and unit-tests run concurrently).
+    # this might not be necessary, but it's more user friendly if the comment is edited first (otherwise pr-info and unit-tests run concurrently).
     needs: pr-info
     continue-on-error: true
     
@@ -117,6 +117,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ needs.pr-info.outputs.commit }}
 
       - uses: r-lib/actions/setup-r@master
         with:
