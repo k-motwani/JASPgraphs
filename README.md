@@ -7,6 +7,7 @@
 ## Overview
 
 jaspGraphs contains selective functions that extend ggplot2 for creating plots for JASP.
+
 EDIT 2022-01-17: to make seamless with jonathon-love/jsq, changing all instances of jaspGraphs to JASPgraphs (reversing name change from 2020 in jasp-stats repos)
 
 ## Typical workflow
