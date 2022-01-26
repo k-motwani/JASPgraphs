@@ -202,24 +202,15 @@ showSideBySide <- function(..., nrow = 1L, ncol = ...length()) {
 
 # arrow labels can be modified
 g1 <- PlotRobustnessSequential(dfLines = dfLines, arrowLabel = c("top", "bottom"))
-<<<<<<< HEAD
-g2 <- PlotRobustnessSequential(dfLines = dfLines,
-                               arrowLabel = jaspGraphs::parseThis(c("alpha", "beta")))
-=======
-g2 <- PlotRobustnessSequential(dfLines = dfLines, arrowLabel = JASPgraphs::parseThis(c("alpha", "beta")))
->>>>>>> parent of ac07633 (JASPgraphs -> jaspGraphs)
+g2 <- PlotRobustnessSequential(dfLines = dfLines, 
+                               arrowLabel = JASPgraphs::parseThis(c("alpha", "beta")))
 showSideBySide(g1, g2)
 
 # text in the top right (evidence text) can be modified
 g1 <- PlotRobustnessSequential(dfLines = dfLines, BF = 1)
-<<<<<<< HEAD
-g2 <- PlotRobustnessSequential(dfLines = dfLines, BF = 1,
+g2 <- PlotRobustnessSequential(dfLines = dfLines, BF = 1, 
                                evidenceTxt = c("I'm above!", "I'm below!"))
-g3 <- PlotRobustnessSequential(dfLines = dfLines, BF = 1,
-                               evidenceTxt = jaspGraphs::parseThis(c("alpha", "omega")))
-=======
-g2 <- PlotRobustnessSequential(dfLines = dfLines, BF = 1, evidenceTxt = c("I'm above!", "I'm below!"))
-g3 <- PlotRobustnessSequential(dfLines = dfLines, BF = 1, evidenceTxt = JASPgraphs::parseThis(c("alpha", "omega")))
->>>>>>> parent of ac07633 (JASPgraphs -> jaspGraphs)
+g3 <- PlotRobustnessSequential(dfLines = dfLines, BF = 1, 
+                               evidenceTxt = JASPgraphs::parseThis(c("alpha", "omega")))
 showSideBySide(g1, g2, g3)
 }
