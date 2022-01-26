@@ -49,19 +49,19 @@ JASPgraphsPlot <- R6::R6Class(
 
 #' @export
 #' @rdname jaspGraphsPlotMethods
-is.jaspGraphsPlot <- function(x) {
-  inherits(x, "jaspGraphsPlot")
+is.JASPgraphsPlot <- function(x) {
+  inherits(x, "JASPgraphsPlot")
 }
 
 #' @export
 #' @rdname jaspGraphsPlotMethods
-length.jaspGraphsPlot <- function(x) {
+length.JASPgraphsPlot <- function(x) {
   length(x$subplots)
 }
 
 #' @export
 #' @rdname jaspGraphsPlotMethods
-names.jaspGraphsPlot <- function(x) {
+names.JASPgraphsPlot <- function(x) {
   names(x$subplots)
 }
 
