@@ -492,13 +492,7 @@ ggMatrixPlot.default <- function(plotList = NULL, nr = NULL, nc = NULL,
   idx <- which(lengths(plotList) > 0)
   layout[idx] <- seq_along(idx)
   layout[is.na(layout)] <- length(idx) + 1
-<<<<<<< HEAD
-
-  totalGraph <- jaspGraphsPlot$new(
-=======
-  
   totalGraph <- JASPgraphsPlot$new(
->>>>>>> parent of ac07633 (JASPgraphs -> jaspGraphs)
       subplots     = c(plotList[lengths(plotList) > 0]),
       names        = c(gtNames[lengths(plotList) > 0]),
       layout       = layout,
