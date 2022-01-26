@@ -299,11 +299,7 @@ PlotRobustnessSequential <- function(
       else
         hypothesisSymbol <- '[1]'
 
-<<<<<<< HEAD
-      evidenceFor <- gettextf("Evidence for H%s:", hypothesisSymbol)
-=======
       evidenceFor <- gettextf("Evidence for H%s:", hypothesisSymbol, domain="R-JASPgraphs")
->>>>>>> parent of ac07633 (JASPgraphs -> jaspGraphs)
       evidenceFor <- fixTranslationForExpression(evidenceFor)
       evidenceTxt <- parseThis(c(evidenceLevel, evidenceFor))
 
@@ -331,11 +327,7 @@ PlotRobustnessSequential <- function(
 
     if (is.null(arrowLabel)) {
       # only translate this once
-<<<<<<< HEAD
-      evidenceBase <- fixTranslationForExpression(gettext("Evidence for H%s"))
-=======
       evidenceBase <- fixTranslationForExpression(gettext("Evidence for H%s",domain="R-JASPgraphs"))
->>>>>>> parent of ac07633 (JASPgraphs -> jaspGraphs)
       evidenceH0 <- sprintf(evidenceBase, "[0]")
 
       hypothesisSymbol <- switch(hypothesis,
@@ -395,13 +387,7 @@ PlotRobustnessSequential <- function(
   g <- themeJasp(g, bty = bty) + rightAxisLine + thm
 
   if (pointLegend && !is.null(dfPoints)) {
-<<<<<<< HEAD
-
-    plot <- jaspGraphsPlot$new(
-=======
-    
-    plot <- JASPgraphsPlot$new(
->>>>>>> parent of ac07633 (JASPgraphs -> jaspGraphs)
+    plot <- JASPgraphsPlot$new(      
       subplots     = list(legendPlot, g),
       layout       = matrix(1:2, 2),
       heights      = c(.2, .8),
