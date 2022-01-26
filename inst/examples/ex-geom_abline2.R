@@ -1,5 +1,5 @@
 library(ggplot2)
-library(jaspGraphs)
+library(JASPgraphs)
 
 dfRect <- data.frame(xmin = -10, ymin = -10, xmax = 10, ymax = 10)
 basePlot <- ggplot(data = dfRect, aes(xmin = xmin, ymin = ymin, ymax = ymax, xmax = xmax)) +
