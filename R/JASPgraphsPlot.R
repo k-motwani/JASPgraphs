@@ -37,6 +37,11 @@ JASPgraphsPlot <- R6::R6Class(
 #'
 #' @export
 #' @rdname jaspGraphsPlotMethods
+
+`[[.JASPgraphsPlot` <- function(x, field) x$subplots[[field]]
+
+#' @export
+#' @rdname jaspGraphsPlotMethods
 `[[<-.JASPgraphsPlot` <- function(x, field, value) {
   x$subplots[[field]] <- value
   return(x)
