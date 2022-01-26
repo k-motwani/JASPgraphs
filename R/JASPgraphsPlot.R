@@ -11,13 +11,8 @@ JASPgraphsPlot <- R6::R6Class(
         stop2("plotFunction should be a function!")
       plotArgs <- list(...)
       if (!length(names(plotArgs)) == length(plotArgs))
-<<<<<<< HEAD
         stop2("all arguments in ... should be named.")
-      if (is.null(plotArgs[["names"]]) && identical(plotFunction, reDrawJaspGraphsPlot))
-=======
-        stop("all arguments in ... should be named.")
       if (is.null(plotArgs[["names"]]) && identical(plotFunction, reDrawJASPgraphsPlot))
->>>>>>> parent of ac07633 (JASPgraphs -> jaspGraphs)
         plotArgs[["names"]] <- paste0("plot", seq_along(subplots))
 
       self$subplots     <- subplots
@@ -41,15 +36,8 @@ JASPgraphsPlot <- R6::R6Class(
 #' @description These methods are mainly convenience functions that ensure things like seq_along work.
 #'
 #' @export
-`[[.JASPgraphsPlot` <- function(x, field) x$subplots[[field]]
-
-#' @export
-<<<<<<< HEAD
 #' @rdname jaspGraphsPlotMethods
-`[[<-.jaspGraphsPlot` <- function(x, field, value) {
-=======
 `[[<-.JASPgraphsPlot` <- function(x, field, value) {
->>>>>>> parent of ac07633 (JASPgraphs -> jaspGraphs)
   x$subplots[[field]] <- value
   return(x)
 }
@@ -60,7 +48,6 @@ is.jaspGraphsPlot <- function(x) {
   inherits(x, "jaspGraphsPlot")
 }
 
-<<<<<<< HEAD
 #' @export
 #' @rdname jaspGraphsPlotMethods
 length.jaspGraphsPlot <- function(x) {
@@ -73,10 +60,8 @@ names.jaspGraphsPlot <- function(x) {
   names(x$subplots)
 }
 
-reDrawJaspGraphsPlot <- function(subplots, args, grob = FALSE, newpage = TRUE,
-=======
-reDrawJASPgraphsPlot <- function(subplots, args, grob = FALSE, newpage = FALSE,
->>>>>>> parent of ac07633 (JASPgraphs -> jaspGraphs)
+
+reDrawJASPgraphsPlot <- function(subplots, args, grob = FALSE, newpage = TRUE,
                                  decodeplotFun = get0("decodeplot"), ...) {
   # redraws plots from PlotPriorAndPosterior, PlotRobustnessSequential, and ggMatrixplot
   g <- gridExtra::arrangeGrob(
