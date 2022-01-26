@@ -35,9 +35,9 @@ JASPgraphsPlot <- R6::R6Class(
 #'
 #' @description These methods are mainly convenience functions that ensure things like seq_along work.
 #'
+
 #' @export
 #' @rdname jaspGraphsPlotMethods
-
 `[[.JASPgraphsPlot` <- function(x, field) x$subplots[[field]]
 
 #' @export
