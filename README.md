@@ -13,13 +13,13 @@ JASPgraphs contains selective functions that extend ggplot2 for creating plots f
 
 ## Typical workflow
 
-For almost all plots, the idea is that you only use two functions of jaspGraphs: `geom_rangeframe()`, and `themeJaspRaw()`.
+For almost all plots, the idea is that you only use two functions of JASPgraphs: `geom_rangeframe()`, and `themeJaspRaw()`.
 
 Assuming you created some ggplot2 object called `plot`, you can do:
 ```r
 plot +
   JASPgraphs::geom_rangeframe() + # add lines on the x-axis and y-axis
-  JASPgraphs::themeJASPraw()      # add the JASP theme
+  JASPgraphs::themeJaspRaw()      # add the JASP theme
 ```
 
 ## Installation
