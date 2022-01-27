@@ -26,10 +26,10 @@ JASPgraphsPlot <- R6::R6Class(
   )
 )
 
-#' Methods for interacting with a jaspGraphsPlot
+#' Methods for interacting with a K
 #'
-#' @name jaspGraphsPlotMethods
-#' @param x an object of class jaspGraphsPlot
+#' @name JASPraphsPlotMethods
+#' @param x an object of class JASPgraphsPlot
 #' @param field the name or index of a subplot
 #' @param value the value that should be assigned
 #'
@@ -37,18 +37,18 @@ JASPgraphsPlot <- R6::R6Class(
 #'
 
 #' @export
-#' @rdname jaspGraphsPlotMethods
+#' @rdname JASPgraphsPlotMethods
 `[[.JASPgraphsPlot` <- function(x, field) x$subplots[[field]]
 
 #' @export
-#' @rdname jaspGraphsPlotMethods
+#' @rdname JASPgraphsPlotMethods
 `[[<-.JASPgraphsPlot` <- function(x, field, value) {
   x$subplots[[field]] <- value
   return(x)
 }
 
 #' @export
-#' @rdname jaspGraphsPlotMethods
+#' @rdname JASPgraphsPlotMethods
 is.JASPgraphsPlot <- function(x) {
   inherits(x, "JASPgraphsPlot")
 }
