@@ -10,8 +10,8 @@ plotQQnorm(
   upper = NULL,
   abline = TRUE,
   ablineColor = "red",
-  xName = gettext("Theoretical quantiles", domain = "R-jaspGraphs"),
-  yName = gettext("Observed quantiles", domain = "R-jaspGraphs")
+  xName = gettext("Theoretical quantiles", domain = "R-JASPgraphs"),
+  yName = gettext("Observed quantiles", domain = "R-JASPgraphs")
 )
 }
 \arguments{
@@ -37,7 +37,7 @@ This function is equivalent to \code{qqnorm(residuals); qqline(residuals)}, but 
 }
 \examples{
 x <- rnorm(100)
-jaspGraphs::plotQQnorm(x)
+JASPgraphs::plotQQnorm(x)
 # add a confidence interval for each point
 lower <- x - .1
 upper <- x + .1
