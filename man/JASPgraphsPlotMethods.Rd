@@ -4,6 +4,8 @@
 \alias{JASPgraphsPlotMethods}
 \alias{[[JASPgraphsPlot}
 \alias{[[<-JASPgraphsPlot}
+\alias{[[.JASPgraphsPlot}
+\alias{[[<-.JASPgraphsPlot}
 \alias{is.JASPgraphsPlot}
 \alias{length.JASPgraphsPlot}
 \alias{names.JASPgraphsPlot}
