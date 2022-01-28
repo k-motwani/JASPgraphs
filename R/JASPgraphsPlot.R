@@ -1,9 +1,9 @@
 #' @importFrom ggplot2 is.ggplot
 
-jaspGraphsPlot <- R6::R6Class(
-  classname = "jaspGraphsPlot",
+JASPgraphsPlot <- R6::R6Class(
+  classname = "JASPgraphsPlot",
   public = list(
-    initialize = function(subplots, plotFunction = reDrawJaspGraphsPlot, ...) {
+    initialize = function(subplots, plotFunction = reDrawJASPgraphsPlot, ...) {
 
       if (!all(vapply(subplots, is.ggplot, TRUE)))
         stop2("all subplots should be of class ggplot!")
@@ -12,7 +12,7 @@ jaspGraphsPlot <- R6::R6Class(
       plotArgs <- list(...)
       if (!length(names(plotArgs)) == length(plotArgs))
         stop2("all arguments in ... should be named.")
-      if (is.null(plotArgs[["names"]]) && identical(plotFunction, reDrawJaspGraphsPlot))
+      if (is.null(plotArgs[["names"]]) && identical(plotFunction, reDrawJASPgraphsPlot))
         plotArgs[["names"]] <- paste0("plot", seq_along(subplots))
 
       self$subplots     <- subplots
@@ -26,44 +26,47 @@ jaspGraphsPlot <- R6::R6Class(
   )
 )
 
-#' Methods for interacting with a jaspGraphsPlot
+#' Methods for interacting with a K
 #'
-#' @name jaspGraphsPlotMethods
-#' @param x an object of class jaspGraphsPlot
+#' @name JASPraphsPlotMethods
+#' @param x an object of class JASPgraphsPlot
 #' @param field the name or index of a subplot
 #' @param value the value that should be assigned
 #'
 #' @description These methods are mainly convenience functions that ensure things like seq_along work.
 #'
-#' @export
-`[[.jaspGraphsPlot` <- function(x, field) x$subplots[[field]]
 
 #' @export
-#' @rdname jaspGraphsPlotMethods
-`[[<-.jaspGraphsPlot` <- function(x, field, value) {
+#' @rdname JASPgraphsPlotMethods
+`[[.JASPgraphsPlot` <- function(x, field) x$subplots[[field]]
+
+#' @export
+#' @rdname JASPgraphsPlotMethods
+`[[<-.JASPgraphsPlot` <- function(x, field, value) {
   x$subplots[[field]] <- value
   return(x)
 }
 
 #' @export
-#' @rdname jaspGraphsPlotMethods
-is.jaspGraphsPlot <- function(x) {
-  inherits(x, "jaspGraphsPlot")
+#' @rdname JASPgraphsPlotMethods
+is.JASPgraphsPlot <- function(x) {
+  inherits(x, "JASPgraphsPlot")
 }
 
 #' @export
 #' @rdname jaspGraphsPlotMethods
-length.jaspGraphsPlot <- function(x) {
+length.JASPgraphsPlot <- function(x) {
   length(x$subplots)
 }
 
 #' @export
 #' @rdname jaspGraphsPlotMethods
-names.jaspGraphsPlot <- function(x) {
+names.JASPgraphsPlot <- function(x) {
   names(x$subplots)
 }
 
-reDrawJaspGraphsPlot <- function(subplots, args, grob = FALSE, newpage = TRUE,
+
+reDrawJASPgraphsPlot <- function(subplots, args, grob = FALSE, newpage = TRUE,
                                  decodeplotFun = get0("decodeplot"), ...) {
   # redraws plots from PlotPriorAndPosterior, PlotRobustnessSequential, and ggMatrixplot
   g <- gridExtra::arrangeGrob(

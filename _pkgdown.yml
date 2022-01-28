@@ -2,7 +2,7 @@
 #   package: tidytemplate
 
 navbar:
-  title: "jaspGraphs"
+  title: "JASPgraphs"
   left:
     - text: "Functions"
       href: reference/index.html
@@ -62,13 +62,13 @@ reference:
   - scale_x_continuous
   - getBFSubscripts
 
-- title: jaspGraphsPlot
+- title: JASPgraphsPlot
   desc: >
     An R6 wrapper around multiple ggplot2 objects to postpone drawing of a figure.
     This is mainly necessary because composed ggplot2 objects typically becomes grobs
     which cannot be edited at the moment.
   contents:
-  - jaspGraphsPlotMethods
+  - JASPgraphsPlotMethods
   - ggMatrixPlot
 
 - title: Deprecated
