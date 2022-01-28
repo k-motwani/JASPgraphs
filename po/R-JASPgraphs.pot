@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: jaspGraphs 0.5.2.12\n"
+"Project-Id-Version: JASPgraphs 0.5.2.12\n"
 "POT-Creation-Date: 2022-01-29 03:18\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -67,7 +67,7 @@ msgstr ""
 msgid "aestethic 'method' for geom_abline2 expects either 'breaks' or 'ggplot2' but got something else!"
 msgstr ""
 
-msgid "jaspGraphs could not obtain axes labels from graph"
+msgid "JASPgraphs could not obtain axes labels from graph"
 msgstr ""
 
 msgid "input was not a valid R expression, reinterpreting as character"
