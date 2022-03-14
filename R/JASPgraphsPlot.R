@@ -26,9 +26,9 @@ JASPgraphsPlot <- R6::R6Class(
   )
 )
 
-#' Methods for interacting with a K
+#' Methods for interacting with a JASPgraphsplot
 #'
-#' @name JASPraphsPlotMethods
+#' @name JASPgraphsPlotMethods
 #' @param x an object of class JASPgraphsPlot
 #' @param field the name or index of a subplot
 #' @param value the value that should be assigned
