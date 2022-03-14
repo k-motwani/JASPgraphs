@@ -54,12 +54,8 @@ export(getPrettyAxisBreaks)
 export(ggMatrixPlot)
 export(graphOptions)
 export(hypothesis2BFtxt)
-<<<<<<< HEAD
-export(is.jaspGraphsPlot)
-export(jaspHistogram)
-=======
 export(is.JASPgraphsPlot)
->>>>>>> 3dba834 (Restore namespace, update Rcmdcheck (#8))
+export(jaspHistogram)
 export(needsParsing)
 export(parseThis)
 export(plotEditing)
