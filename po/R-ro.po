@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JASPgraphs 0.5.2.12\n"
+"Project-Id-Version: JASPgraphs 0.5.2.13\n"
 "POT-Creation-Date: 2022-01-29 03:18\n"
 "PO-Revision-Date: 2022-02-16 17:04+0000\n"
 "Last-Translator: BogdanKKJ <bogdan.dm.cocos@gmail.com>\n"
