@@ -153,7 +153,7 @@ drawAxis <- function(graph = NULL, xName = waiver(), yName = waiver(), breaks = 
 
 }
 
-#' @title drawBars: Deprecated, testing for backwards compatibility with k-motwani/jsq 1.1.0
+#' @title drawBars: Deprecated, use \code{ggplot2::geom_bar} instead. testing for backwards compatibility with k-motwani/jsq 1.1.0
 #'
 #' @param graph ggplot2 object
 #' @param dat data frame
@@ -164,7 +164,7 @@ drawAxis <- function(graph = NULL, xName = waiver(), yName = waiver(), breaks = 
 #' @param show.legend show legend = FALSE
 #' @param size size
 #' @param alpha transparency
-#' @param ... other arguments to geom_line
+#' @param ... other arguments to geom_bar
 #'
 #' @export
 drawBars <- function(graph = drawAxis(), dat, mapping = NULL, stat="identity", fill="gray80", width = NULL, show.legend = FALSE, ...) {
