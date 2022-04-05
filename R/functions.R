@@ -153,27 +153,39 @@ drawAxis <- function(graph = NULL, xName = waiver(), yName = waiver(), breaks = 
 
 }
 
-# # @export
-# drawBars <- function(graph = drawAxis(), dat, mapping = NULL, stat="identity", fill="gray80", width = NULL, show.legend = FALSE, ...) {
-#
-#     if (is.null(mapping)) {
-#
-#         nms <- colnames(dat)
-#
-#         mapping <- switch(as.character(length(nms)),
-#                           "1" = ggplot2::aes_string(x = nms[1]),
-#                           "2" = ggplot2::aes_string(x = nms[1], y = nms[2]),
-#                           "3" = ggplot2::aes_string(x = nms[1], y = nms[2], group = nms[3], linetype = nms[3])
-#         )
-#
-#     }
-#
-#     args = list(data = dat, mapping = mapping, fill = fill, stat=stat, width = width, show.legend = show.legend, ...)
-#     args[names(args) %in% names(mapping)] <- NULL
-#
-#     return(graph + do.call(ggplot2::geom_bar, args))
-#
-# }
+#' @title drawBars: Deprecated, testing for backwards compatibility with k-motwani/jsq 1.1.0
+#'
+#' @param graph ggplot2 object
+#' @param dat data frame
+#' @param mapping mapping from aes
+#' @param stat stat = 'identity'
+#' @param fill fill = 'gray80'
+#' @param width width = NULL
+#' @param show.legend show legend = FALSE
+#' @param size size
+#' @param alpha transparency
+#' @param ... other arguments to geom_line
+#'
+#' @export
+drawBars <- function(graph = drawAxis(), dat, mapping = NULL, stat="identity", fill="gray80", width = NULL, show.legend = FALSE, ...) {
+
+    if (is.null(mapping)) {
+
+        nms <- colnames(dat)
+
+        mapping <- switch(as.character(length(nms)),
+                          "1" = ggplot2::aes_string(x = nms[1]),
+                          "2" = ggplot2::aes_string(x = nms[1], y = nms[2]),
+                          "3" = ggplot2::aes_string(x = nms[1], y = nms[2], group = nms[3], linetype = nms[3])
+        )
+
+    }
+
+    args = list(data = dat, mapping = mapping, fill = fill, stat=stat, width = width, show.legend = show.legend, ...)
+    args[names(args) %in% names(mapping)] <- NULL
+
+    return(graph + do.call(ggplot2::geom_bar, args))
+}
 
 #' @title Deprecated: use \code{ggplot2::geom_line} instead.
 #'
